@@ -12,4 +12,3 @@ class Etat:
             if transition.v == 'v':
                 return transition.e, transition.o
         raise Exception("Transition not Found")
-
