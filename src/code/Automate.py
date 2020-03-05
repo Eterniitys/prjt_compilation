@@ -22,13 +22,23 @@ class Automate:
 
 			elif re.match(r"^V\s+\"(\S+)\"$", line):
 				groups = re.match(r"^V\s+\"(\S+)\"$", line)
+				rep = list()
 				for a in groups.group(0):
-					self.V.append(a)
+					rep.append(a.split("\n")[0])
+				i = 3
+				while (rep[i] != "\""):
+					self.V.append(rep[i])
+					i+=1
 
 			elif re.match(r"^O\s+\"(\S+)\"$", line):
 				groups = re.match(r"^O\s+\"(\S+)\"$", line)
+				rep = list()
 				for a in groups.group(0):
-					self.V.append(a)
+					rep.append(a.split("\n")[0])
+				i = 3
+				while (rep[i] != "\""):
+					self.O.append(rep[i])
+					i+=1
 
 			elif re.match(r"^E\s+(\d+)$", line):
 				groups = re.match(r"^E\s+(\d+)$", line)
@@ -64,9 +74,9 @@ class Automate:
 
 		if len(self.E) == 0 or len(self.V) == 0 or len(self.F) == 0:
 			print("Error : Missing decription line. (E, V, F)")
-		
+
 	def toDot(self):
-		file = open("Graph.dot","w")
+		file = open("dotImage/graph.dot","w")
 		file.write("digraph automate {\n")
 		for state in self.E:
 			for transition in state.transitions:
