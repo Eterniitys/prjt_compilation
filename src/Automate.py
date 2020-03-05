@@ -1,4 +1,5 @@
 import re
+from Etat import *
 
 class Automate:
 	def __init__(self, filepath):
@@ -8,47 +9,59 @@ class Automate:
 		self.V = []	# alpabet entrée
 		self.O = []	# alpabet sortie
 		self.M = "#"
+
 		f = open(filepath, "r")
 		for line in f:
-			if re.match(r"C\s+", line):
+			if re.match(r"^C\s+", line):
 					pass
-			else re.match(r"M\s+(.)", line):
-				groups = re.match(r"M\s+(.)", line)
+
+			elif re.match(r"^M\s+(.)$", line):
+				groups = re.match(r"^M\s+(.)$", line)
 				self.M = groups.group(0)
-			elif re.match(r"V\s+\"(\S+)\"", line):
-				groups = re.match(r"V\s+\"(\S+)\"", line)
+
+			elif re.match(r"^V\s+\"(\S+)\"$", line):
+				groups = re.match(r"^V\s+\"(\S+)\"$", line)
 				for a in groups.group(0):
-					self.V.appends(a)
-			elif re.match(r"O\s+\"(\S+)\"", line):
-				groups = re.match(r"O\s+\"(\S+)\"", line)
+					self.V.append(a)
+
+			elif re.match(r"^O\s+\"(\S+)\"$", line):
+				groups = re.match(r"^O\s+\"(\S+)\"$", line)
 				for a in groups.group(0):
-					self.V.appends(a)
-			elif re.match(r"E\s+(\d+)", line):
-				groups = re.match(r"E\s+(\d+)", line)
-				for nb in range(groups.group(0)):
-					self.E.appends(Etat(nb))
-			elif re.match(r"I\s+(?P<init>\d+(?>\s+\d+)*)",line):
-				groups = re.match(r"I\s+(?P<init>\d+(?>\s+\d+)*)",line)
-				self.I = []
-				for nb in groups.group("init").split("\s")
-					self.I.appends(nb)
-			elif re.match(r"F\s+(?P<final>\d*(?>\s+\d+)*)"):
-				groups = re.match(r"F\s+(?P<final>\d*(?>\s+\d+)*)")
-				self.I = []
-				for nb in groups.group("final").split("\s+")
-					self.I.appends(nb)
-			elif re.match(r"T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?"):
-				groups = re.match(r"T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?")
+					self.V.append(a)
+
+			elif re.match(r"^E\s+(\d+)$", line):
+				groups = re.match(r"^E\s+(\d+)$", line)
+				for nb in range(int(groups.group(0).split(" ")[1])): # split + 1 + int 
+					self.E.append(Etat(str(nb)))
+
+			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)$",line):
+				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)$",line)
+				#self.I = []
+				for nb in groups.group("init").split("\s"):
+					self.I.append(nb)
+
+			elif re.match(r"F\s+(?P<final>\d*(?:\s+\d+)*)",line):
+				groups = re.match(r"^F\s+(?P<final>\d*(?:\s+\d+)*)$",line)
+				#self.I = []
+				for nb in groups.group("final").split("\s+"):
+					self.F.append(nb)
+
+			elif re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?$",line):
+				groups = re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?$",line)
 				e1 = groups.group("etatOrigine")
 				e2 = groups.group("etatSortie")
 				a1 = groups.group("v")
 				a2 = groups.group("o")
-					self.E[e1].addTransition(a1, e2, a2)
+				self.E[int(e1)].addTransition(a1, e2, a2)
+
 			else:
-				error("bad description file :" + line)
+				print("Error : bad description file :" + line)
+
 		if len(self.E) == 0 or len(self.V) == 0 or len(self.F) == 0:
-			error("Missing decription line.(E, V, F)")
+			print("Error : Missing decription line. (E, V, F)")
 		
+
+auto = Automate("../Exemples/automate6.descr")
 			
 		
 """

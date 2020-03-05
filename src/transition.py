@@ -1,4 +1,4 @@
-class Transistion(object):
+class Transition(object):
 
 	def __init__(self, v, e, o):
 		self.v = v # caractere lu
