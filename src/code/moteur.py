@@ -96,7 +96,7 @@ filepath_input = "entrees/entree.txt"
 words = readFile(filepath_input)
 
 ### AUTOMATE ###
-filepath_automate = "automate_exemples/automate.descr"
+filepath_automate = "automate_exemples/automate1.descr"
 auto = Automate(filepath_automate)
 auto.toDot()
 

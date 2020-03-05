@@ -15,13 +15,13 @@ class Automate:
 			if re.match(r"^C\s+", line):
 					pass
 
-			elif re.match(r"^M\s+(.)$", line):
-				groups = re.match(r"^M\s+(.)$", line)
+			elif re.match(r"^M\s+(.)\s*$", line):
+				groups = re.match(r"^M\s+(.)\s*$", line)
 				self.M = groups.group(0)
 				self.M = self.M.split(" ")[1]
 
-			elif re.match(r"^V\s+\"(\S+)\"$", line):
-				groups = re.match(r"^V\s+\"(\S+)\"$", line)
+			elif re.match(r"^V\s+\"(\S+)\"\s*$", line):
+				groups = re.match(r"^V\s+\"(\S+)\"\s*$", line)
 				rep = list()
 				for a in groups.group(0):
 					rep.append(a.split("\n")[0])
@@ -30,8 +30,8 @@ class Automate:
 					self.V.append(rep[i])
 					i+=1
 
-			elif re.match(r"^O\s+\"(\S+)\"$", line):
-				groups = re.match(r"^O\s+\"(\S+)\"$", line)
+			elif re.match(r"^O\s+\"(\S+)\"\s*$", line):
+				groups = re.match(r"^O\s+\"(\S+)\"\s*$", line)
 				rep = list()
 				for a in groups.group(0):
 					rep.append(a.split("\n")[0])
@@ -40,25 +40,25 @@ class Automate:
 					self.O.append(rep[i])
 					i+=1
 
-			elif re.match(r"^E\s+(\d+)$", line):
-				groups = re.match(r"^E\s+(\d+)$", line)
+			elif re.match(r"^E\s+(\d+)\s*$", line):
+				groups = re.match(r"^E\s+(\d+)\s*$", line)
 				for nb in range(int(groups.group(0).split(" ")[1])): # split + 1 + int 
 					self.E.append(Etat(str(nb)))
 
-			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)$",line):
-				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)$",line)
+			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line):
+				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line)
 				#self.I = []
 				for nb in groups.group("init").split("\s"):
 					self.I.append(nb)
 
-			elif re.match(r"F\s+(?P<final>\d*(?:\s+\d+)*)",line):
-				groups = re.match(r"^F\s+(?P<final>\d*(?:\s+\d+)*)$",line)
+			elif re.match(r"F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line):
+				groups = re.match(r"^F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line)
 				#self.I = []
 				for nb in groups.group("final").split("\s+"):
 					self.F.append(nb)
 
-			elif re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?$",line):
-				groups = re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?$",line)
+			elif re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?\s*$",line):
+				groups = re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?\s*$",line)
 				e1 = groups.group("etatOrigine")
 				e2 = groups.group("etatSortie")
 				a1 = groups.group("v")
