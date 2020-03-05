@@ -18,6 +18,7 @@ class Automate:
 			elif re.match(r"^M\s+(.)$", line):
 				groups = re.match(r"^M\s+(.)$", line)
 				self.M = groups.group(0)
+				self.M = self.M.split(" ")[1]
 
 			elif re.match(r"^V\s+\"(\S+)\"$", line):
 				groups = re.match(r"^V\s+\"(\S+)\"$", line)
@@ -52,6 +53,10 @@ class Automate:
 				e2 = groups.group("etatSortie")
 				a1 = groups.group("v")
 				a2 = groups.group("o")
+				if a1 == None:
+					a1 = self.M
+				if a2 == None:
+					a2 = self.M
 				self.E[int(e1)].addTransition(a1, e2, a2)
 
 			else:
@@ -60,9 +65,17 @@ class Automate:
 		if len(self.E) == 0 or len(self.V) == 0 or len(self.F) == 0:
 			print("Error : Missing decription line. (E, V, F)")
 		
+	def toDot(self):
+		file = open("Graph.dot","w")
+		file.write("digraph automate {\n")
+		for state in self.E:
+			for transition in state.transitions:
+				dep = state.name
+				arr = transition.e
+				file.write("\t{} -> {} [label=\"{}/{}\"];\n".format(dep,arr,transition.v,transition.o))
+		file.write("}")
 
-auto = Automate("../Exemples/automate6.descr")
-			
+
 		
 """
 <AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]* (1)

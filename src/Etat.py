@@ -1,4 +1,4 @@
-from transition import *
+from Transition import *
 
 class Etat:
     def __init__(self, name):
