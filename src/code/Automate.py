@@ -79,6 +79,12 @@ class Automate:
 				return self.E[i]
 		raise Exception("Il n'y a pas  d'état correspondant au nom de {}".format(stateName))
 		
+	def getInitialState(self):
+		IState = []
+		for state in self.I:
+			IState.append(self.E[state])
+		return IState
+		
 """
 <AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]* (1)
 

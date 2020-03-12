@@ -1,5 +1,7 @@
 from Automate import *
 
+pathLogFile = "automate.log"
+
 def readFile(filepath):
 	file = open(filepath,"r")
 	ch = file.readline()
@@ -27,7 +29,8 @@ def testAlphabet(alpha, word):
 	for c in listChar:
 		if c not in alpha:
 			rep = False
-			print("{} n'est pas dans alphabet entrée de l'automate".format(c))
+			with open(pathLogFile, "a+") as logFile:
+				logFile.write("\n{} n'est pas dans alphabet entrée de l'automate".format(c))
 	return rep
 
 def testTransition(word, stateDep, auto, output):
@@ -35,7 +38,8 @@ def testTransition(word, stateDep, auto, output):
 		stateArr, characterEcris = stateDep.transitTo(charactere)
 		stateArr = auto.E[stateArr]
 		output.append(characterEcris)
-		print("Config: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
+		with open(pathLogFile, "a+") as logFile:
+			logFile.write("\nConfig: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
 		stateDep = stateArr
 	return stateArr
 
@@ -46,16 +50,20 @@ def analyse(auto, word):
 	## verification alphabet d'entree ##
 	if testAlphabet(auto.V, word):
 
-		stateDep = auto.E[auto.I[0]] #TODO plrs etats initiaux
+
+		stateDep = auto.getInitialState()[0] #TODO plrs etats initiaux
+
 		etatFinal = testTransition(word,stateDep, auto, output)
 
 		if etatFinal.name not in auto.F:
 			result = False
-			print("Erreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
+			with open(pathLogFile, "a+") as logFile:
+				logFile.write("\nErreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
 			return output, result
 	else:
 		result = False
-		print("Erreur : un caractère du mot ne correspond pas à l'alphabet d'entrée de l'automate")
+		with open(pathLogFile, "a+") as logFile:
+			logFile.write("\nErreur : un caractère du mot ne correspond pas à l'alphabet d'entrée de l'automate")
 
 	return output, result
 
@@ -72,14 +80,20 @@ filepath_automate = "testMoteur/C0.descr"
 auto = Automate(filepath_automate)
 auto.toDot()
 
+### fichier de log
+with open(pathLogFile, "w") as logFile:
+	logFile.write("")
+
 ### TREATMENT ###
 for word in words:
 	output, result = analyse(auto, word)
 
-	if result :
-		print("{}\t ==\tmot du langage de l'automate".format(word))
-		print("Sortie : {}".format(output))
-	else :
-		print("{}\t <>\tmot du langage de l'automate".format(word))
-		print("Sortie : {}".format(output))
-	print("\n")
+	with open(pathLogFile, "a+") as logFile:
+		if result :
+			logFile.write("\n{}\t ==\tmot du langage de l'automate".format(word))
+			logFile.write("Sortie : {}".format(output))
+		else :
+		
+			logFile.write("\n{}\t <>\tmot du langage de l'automate".format(word))
+			logFile.write("Sortie : {}".format(output))
+		logFile.write("\n")

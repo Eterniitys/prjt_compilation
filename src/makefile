@@ -1,5 +1,6 @@
 all:
 	python code/moteur.py
+	cat automate.log
 test:
 	python code/test.py
 help:
