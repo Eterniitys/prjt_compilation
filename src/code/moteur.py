@@ -45,7 +45,8 @@ def testTransition(word, stateDep, auto, config, output, erreur):
 				find = True
 				# Je prends cette transition car deterministe -> que celle la possible
 				arrive = transition.e
-				output.append(transition.o)
+				if (transition.o != auto.M):
+					output.append(transition.o)
 				config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, transition.v, transition.o, arrive))
 				stateDep = getState(auto.E, arrive)
 		#transition pas trouvé
