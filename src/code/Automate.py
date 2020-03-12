@@ -46,13 +46,12 @@ class Automate:
 
 			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line):
 				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line)
-				#self.I = []
+				self.I = []
 				for nb in groups.group("init").split("\s"):
 					self.I.append(nb)
 
 			elif re.match(r"F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line):
 				groups = re.match(r"^F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line)
-				#self.I = []
 				for nb in groups.group("final").split("\s+"):
 					self.F.append(nb)
 
@@ -84,7 +83,11 @@ class Automate:
 				file.write("\t{} -> {} [label=\"{}/{}\"];\n".format(dep,arr,transition.v,transition.o))
 		file.write("}")
 
-
+	def getState(self, stateName):
+		for i in self.E:
+			if self.E[i].name == stateName:
+				return self.E[i]
+		raise Exception("Il n'y a pas  d'état correspondant au nom de {}".format(stateName))
 		
 """
 <AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]* (1)

@@ -1,6 +1,5 @@
 from Automate import *
 
-
 def readFile(filepath):
 	file = open(filepath,"r")
 	ch = file.readline()
@@ -31,32 +30,14 @@ def testAlphabet(alpha, word):
 			print("{} n'est pas dans alphabet entrée de l'automate".format(c))
 	return rep
 
-def getState(states, charactere):
-	for state in states:
-		if state.name == charactere:
-			return state
-	return -1
-
-def testTransition(word, stateDep, auto, config, output, erreur):
+def testTransition(word, stateDep, auto, output):
 	for charactere in word:
-		find = False
-		for transition in stateDep.transitions:
-			if transition.v == charactere:
-				find = True
-				# Je prends cette transition car deterministe -> que celle la possible
-				arrive = transition.e
-				if (transition.o != auto.M):
-					output.append(transition.o)
-				config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, transition.v, transition.o, arrive))
-				stateDep = getState(auto.E, arrive)
-		#transition pas trouvé
-		if not find:
-			config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, None, None, None))
-			erreur = "Erreur : La transition {}/? n'existe pas dans l'état {}".format(charactere, stateDep.name)
-			result = False
-			return config, output, result, erreur
-
-	return stateDep
+		stateArr, characterEcris = stateDep.transitTo(charactere)
+		stateArr = auto.E[int(stateArr)]
+		output.append(characterEcris)
+		print("Config: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
+		stateDep = stateArr
+	return stateArr
 
 def analyse(auto, word):
 	config = list() # liste des config successives de l'automate -> etat 0 prend transition a et ecris 1
@@ -68,23 +49,22 @@ def analyse(auto, word):
 	if testAlphabet(auto.V, word):
 
 		# état de départ
-		stateDep = getState(auto.E, auto.I[0]) #TODO plrs etats initiaux
+		stateDep = auto.E[int(auto.I[0])] #TODO plrs etats initiaux
 
 		# test transitions
-		etatFinal = testTransition(word,stateDep, auto, config, output, erreur)
+		etatFinal = testTransition(word,stateDep, auto, output)
 
 		# test de l'état final du mot
 		if etatFinal.name not in auto.F:
 			result = False
-			erreur = "Erreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name)
-			return config, output, result, erreur
+			print("Erreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
+			return output, result
 
 	else:
 		result = False
-		config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(None, None, None, None))
-		erreur = "Erreur : un caractère du mot ne correspond pas à l'alphabet d'entrée de l'automate"
+		print("Erreur : un caractère du mot ne correspond pas à l'alphabet d'entrée de l'automate")
 
-	return config, output, result, erreur
+	return output, result
 
 
 print("\nBienvenu sur notre moteur d'automate !\n")
@@ -101,16 +81,17 @@ auto.toDot()
 
 ### TREATMENT ###
 for word in words:
-	config, output, result, erreur = analyse(auto, word)
+	output, result = analyse(auto, word)
+
 	if result :
 		print("{}\t ==\tmot du langage de l'automate".format(word))
 		print("Sortie : {}".format(output))
-		for conf in config:
-			print("Config : {}".format(conf))
+		#for conf in config:
+		#	print("Config : {}".format(conf))
 	else :
 		print("{}\t <>\tmot du langage de l'automate".format(word))
 		print("Sortie : {}".format(output))
-		for conf in config:
-			print("Config : {}".format(conf))
-		print(erreur)
+		#for conf in config:
+		#	print("Config : {}".format(conf))
+		#print(erreur)
 	print("\n")
