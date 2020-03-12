@@ -3,19 +3,16 @@ from Automate import *
 
 def readFile(filepath):
 	file = open(filepath,"r")
-	str = file.readline()
+	ch = file.readline()
 	words =  list()
 
-	while(str != "###"):
-		if (len(str.split(" ")) > 1):
-			str = str.split(" ")
-			for word in str:
-				word = word.split('\n')[0]
+	while(ch[:3] != "###"):
+		ch = ch.split(" ")
+		for word in ch:
+			word = word.split('\n')[0]
+			if word != "":
 				words.append(word)
-		else:
-			word = str.split('\n')[0]
-			words.append(word)
-		str = file.readline()
+		ch = file.readline()
 	return words
 
 def getListChar(word):
@@ -49,12 +46,12 @@ def testTransition(word, stateDep, auto, config, output, erreur):
 				# Je prends cette transition car deterministe -> que celle la possible
 				arrive = transition.e
 				output.append(transition.o)
-				config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name,transition.v, transition.o, arrive))
+				config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, transition.v, transition.o, arrive))
 				stateDep = getState(auto.E, arrive)
 		#transition pas trouvé
 		if not find:
 			config.append("Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, None, None, None))
-			erreur = "Erreur : La transition {}/? n'existe pas dans l'état {}".format(charactere,stateDep.name)
+			erreur = "Erreur : La transition {}/? n'existe pas dans l'état {}".format(charactere, stateDep.name)
 			result = False
 			return config, output, result, erreur
 
@@ -102,7 +99,7 @@ auto.toDot()
 
 ### TREATMENT ###
 for word in words:
-	config, output, result, erreur = analyse(auto,word)
+	config, output, result, erreur = analyse(auto, word)
 	if result :
 		print("{}\t ==\tmot du langage de l'automate".format(word))
 		print("Sortie : {}".format(output))

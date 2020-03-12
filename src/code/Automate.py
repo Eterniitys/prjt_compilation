@@ -17,8 +17,7 @@ class Automate:
 
 			elif re.match(r"^M\s+(.)\s*$", line):
 				groups = re.match(r"^M\s+(.)\s*$", line)
-				self.M = groups.group(0)
-				self.M = self.M.split(" ")[1]
+				self.M = groups.group(1)
 
 			elif re.match(r"^V\s+\"(\S+)\"\s*$", line):
 				groups = re.match(r"^V\s+\"(\S+)\"\s*$", line)
