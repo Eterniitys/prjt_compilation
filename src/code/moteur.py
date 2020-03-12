@@ -67,7 +67,7 @@ def analyse(auto, word):
 	if testAlphabet(auto.V, word):
 
 		# état de départ
-		stateDep = getState(auto.E, auto.I[0])
+		stateDep = getState(auto.E, auto.I[0]) #TODO plrs etats initiaux
 
 		# test transitions
 		etatFinal = testTransition(word,stateDep, auto, config, output, erreur)
@@ -89,11 +89,12 @@ def analyse(auto, word):
 print("\nBienvenu sur notre moteur d'automate !\n")
 
 ### INPUT ###
-filepath_input = "entrees/entree.txt"
+filepath_input = "entrees/entree.txt" # parametre
 words = readFile(filepath_input)
 
 ### AUTOMATE ###
-filepath_automate = "automate_exemples/automate1.descr"
+#filepath_automate = "automate_exemples/automate1.descr"
+filepath_automate = "testMoteur/C0.descr"
 auto = Automate(filepath_automate)
 auto.toDot()
 

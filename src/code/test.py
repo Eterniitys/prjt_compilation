@@ -1,4 +1,4 @@
 from Automate import *
 
-auto = Automate("testMoteur/T0.descr")
+auto = Automate("testMoteur/T6.descr")
 auto.toDot()
