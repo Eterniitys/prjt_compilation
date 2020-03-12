@@ -3,7 +3,7 @@ from Etat import *
 
 class Automate:
 	def __init__(self, filepath):
-		self.I = ["0"]	# etats initiaux
+		self.I = [0]	# etats initiaux
 		self.E = []	# tableau des etats
 		self.F = []	# etats finaux
 		self.V = []	# alpabet entrée
@@ -21,39 +21,29 @@ class Automate:
 
 			elif re.match(r"^V\s+\"(\S+)\"\s*$", line):
 				groups = re.match(r"^V\s+\"(\S+)\"\s*$", line)
-				rep = list()
-				for a in groups.group(0):
-					rep.append(a.split("\n")[0])
-				i = 3
-				while (rep[i] != "\""):
-					self.V.append(rep[i])
-					i+=1
+				for a in groups.group(1):
+					self.V.append(a)
 
 			elif re.match(r"^O\s+\"(\S+)\"\s*$", line):
 				groups = re.match(r"^O\s+\"(\S+)\"\s*$", line)
-				rep = list()
-				for a in groups.group(0):
-					rep.append(a.split("\n")[0])
-				i = 3
-				while (rep[i] != "\""):
-					self.O.append(rep[i])
-					i+=1
+				for a in groups.group(1):
+					self.O.append(a)
 
 			elif re.match(r"^E\s+(\d+)\s*$", line):
 				groups = re.match(r"^E\s+(\d+)\s*$", line)
-				for nb in range(int(groups.group(0).split(" ")[1])): # split + 1 + int 
+				for nb in range(int(groups.group(1))):
 					self.E.append(Etat(str(nb)))
 
 			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line):
 				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line)
 				self.I = []
 				for nb in groups.group("init").split("\s"):
-					self.I.append(nb)
+					self.I.append(int(nb))
 
 			elif re.match(r"F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line):
 				groups = re.match(r"^F\s+(?P<final>\d*(?:\s+\d+)*)\s*$",line)
 				for nb in groups.group("final").split("\s+"):
-					self.F.append(nb)
+					self.F.append(int(nb))
 
 			elif re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?\s*$",line):
 				groups = re.match(r"^T\s+(?P<etatOrigine>\d+)\s+'(?P<v>.)'\s+(?P<etatSortie>\d+)(\s+'(?P<o>.)')?\s*$",line)
@@ -65,7 +55,7 @@ class Automate:
 					a1 = self.M
 				if a2 == None:
 					a2 = self.M
-				self.E[int(e1)].addTransition(a1, e2, a2)
+				self.E[int(e1)].addTransition(a1, int(e2), a2)
 
 			else:
 				print("Error : bad description file :" + line)
