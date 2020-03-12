@@ -33,33 +33,26 @@ def testAlphabet(alpha, word):
 def testTransition(word, stateDep, auto, output):
 	for charactere in word:
 		stateArr, characterEcris = stateDep.transitTo(charactere)
-		stateArr = auto.E[int(stateArr)]
+		stateArr = auto.E[stateArr]
 		output.append(characterEcris)
 		print("Config: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
 		stateDep = stateArr
 	return stateArr
 
 def analyse(auto, word):
-	config = list() # liste des config successives de l'automate -> etat 0 prend transition a et ecris 1
 	output = list() # sorties
 	result = True # mot appartient au langage ou pas
-	erreur = "" # messsage d'erreur
 
 	## verification alphabet d'entree ##
 	if testAlphabet(auto.V, word):
 
-		# état de départ
-		stateDep = auto.E[int(auto.I[0])] #TODO plrs etats initiaux
-
-		# test transitions
+		stateDep = auto.E[auto.I[0]] #TODO plrs etats initiaux
 		etatFinal = testTransition(word,stateDep, auto, output)
 
-		# test de l'état final du mot
 		if etatFinal.name not in auto.F:
 			result = False
 			print("Erreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
 			return output, result
-
 	else:
 		result = False
 		print("Erreur : un caractère du mot ne correspond pas à l'alphabet d'entrée de l'automate")
@@ -70,7 +63,7 @@ def analyse(auto, word):
 print("\nBienvenu sur notre moteur d'automate !\n")
 
 ### INPUT ###
-filepath_input = "entrees/entree.txt" # parametre
+filepath_input = "entrees/entree.txt" # TODO parametre
 words = readFile(filepath_input)
 
 ### AUTOMATE ###
@@ -86,12 +79,7 @@ for word in words:
 	if result :
 		print("{}\t ==\tmot du langage de l'automate".format(word))
 		print("Sortie : {}".format(output))
-		#for conf in config:
-		#	print("Config : {}".format(conf))
 	else :
 		print("{}\t <>\tmot du langage de l'automate".format(word))
 		print("Sortie : {}".format(output))
-		#for conf in config:
-		#	print("Config : {}".format(conf))
-		#print(erreur)
 	print("\n")
