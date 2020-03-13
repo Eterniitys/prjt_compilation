@@ -1,7 +1,6 @@
 from Automate import *
 
 
-
 if len(sys.argv)< 3:
 	print("You should set paramaters as folow:")
 	sys.exit()

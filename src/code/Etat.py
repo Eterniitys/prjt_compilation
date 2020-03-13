@@ -25,3 +25,10 @@ class Etat:
 				if transition.v == '#' and transition.o == '#':
 					trans.append(transition)
 		return trans
+
+	def getTransition(self, a):
+		trans = list()
+		for transition in self.transitions:
+			if transition.v == a:
+				trans.append(transition)
+		return trans

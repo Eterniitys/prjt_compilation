@@ -1,2 +1,0 @@
-def transiter(self):
-	pass
