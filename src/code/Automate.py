@@ -1,6 +1,8 @@
 import re
 from Etat import *
 
+pathAutomateLogFile = "automate.log"
+
 class Automate:
 	def __init__(self, filepath):
 		self.I = [0]	# etats initiaux
@@ -9,9 +11,15 @@ class Automate:
 		self.V = []	# alpabet entrée
 		self.O = []	# alpabet sortie
 		self.M = "#"
+		
+		with open(pathAutomateLogFile, "w") as logFile:
+			logFile.write("")
+		
 
 		f = open(filepath, "r")
+		cmpt = 0
 		for line in f:
+			cmpt += 1
 			if re.match(r"^C\s+", line):
 					pass
 
@@ -32,7 +40,7 @@ class Automate:
 			elif re.match(r"^E\s+(\d+)\s*$", line):
 				groups = re.match(r"^E\s+(\d+)\s*$", line)
 				for nb in range(int(groups.group(1))):
-					self.E.append(Etat(str(nb)))
+					self.E.append(Etat(nb))
 
 			elif re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line):
 				groups = re.match(r"^I\s+(?P<init>\d+(?:\s+\d+)*)\s*$",line)
@@ -58,10 +66,14 @@ class Automate:
 				self.E[int(e1)].addTransition(a1, int(e2), a2)
 
 			else:
-				print("Error : bad description file :" + line)
+				self.logWrite("Error line {} ; bad description file ; {}".format(cmpt, line))
 
-		if len(self.E) == 0 or len(self.V) == 0 or len(self.F) == 0:
-			print("Error : Missing decription line. (E, V, F)")
+		if len(self.E) == 0:
+			self.logWrite("Missing decription line : E")
+		if len(self.V) == 0:
+			self.logWrite("Missing decription line : V")
+		if len(self.F) == 0:
+			self.logWrite("Missing decription line : F")
 
 	def toDot(self):
 		file = open("dotImage/graph.dot","w")
@@ -70,20 +82,24 @@ class Automate:
 			for transition in state.transitions:
 				dep = state.name
 				arr = transition.e
-				file.write("\t{} -> {} [label=\"{}/{}\"];\n".format(dep,arr,transition.v,transition.o))
+				file.write("\t{} -> {} [label=\"{}/{}\"];\n".format(dep, arr, transition.v, transition.o))
 		file.write("}")
 
 	def getState(self, stateName):
 		for i in self.E:
 			if self.E[i].name == stateName:
 				return self.E[i]
-		raise Exception("Il n'y a pas  d'état correspondant au nom de {}".format(stateName))
 		
 	def getInitialState(self):
 		IState = []
 		for state in self.I:
 			IState.append(self.E[state])
 		return IState
+		
+	def logWrite(self , ch):
+		with open(pathAutomateLogFile, "a+") as logFile:
+			logFile.write(str(ch))
+		
 		
 """
 <AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]* (1)
