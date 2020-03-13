@@ -6,6 +6,9 @@ class Etat:
 		self.name = name
 		self.transitions = list()
 		self.hasLambdaTrans = False
+	
+	def __repr__(self):
+		return str(self.name)
 
 	def addTransition(self, v, e, o):
 		transition = Transition(v, e, o)

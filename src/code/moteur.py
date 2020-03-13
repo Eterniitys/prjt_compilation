@@ -89,6 +89,8 @@ auto.toDot()
 ### fichier de log
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
+	
+#print(auto.getLambdaClosure([0, 3]))
 
 ### TREATMENT ###
 for word in words:

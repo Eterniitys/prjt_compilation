@@ -89,28 +89,25 @@ class Automate:
 				file.write("\t{} -> {} [label=\"{}/{}\"];\n".format(dep, arr, transition.v, transition.o))
 		file.write("}")
 
-	def getState(self, stateName):
-		for i in self.E:
-			if self.E[i].name == stateName:
-				return self.E[i]
+	def getStates(self, sArray):
+		stateArray = []
+		for state in sArray:
+			stateArray.append(self.E[state])
+		return stateArray
 		
 	def getInitialState(self):
-		IState = []
-		for state in self.I:
-			IState.append(self.E[state])
-		return IState
+		return self.getStates(self.I)
 		
 	def getLambdaClosure(self , origineStates):
-		p = []
-		for state in origineStates:
-			p.append(self.E[state])
+		p = self.getStates(origineStates)
 		lClosure = []
-		while not p.empty():
+		while len(p) != 0:
 			state = p.pop(0)
 			if state not in lClosure:
 				lClosure.append(state)
 				for lTransition in state.getLambdaT():
 					p.append(self.E[lTransition.e])
+		return lClosure
 			
 	
 	def logWrite(self , ch):
