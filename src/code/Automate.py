@@ -59,10 +59,14 @@ class Automate:
 				e2 = groups.group("etatSortie")
 				a1 = groups.group("v")
 				a2 = groups.group("o")
+				if a2 == None:
+					a2 = '#'
 				if a1 == None:
 					a1 = self.M
 				if a2 == None:
 					a2 = self.M
+				if (a2  == '#' and a1 == '#'):
+					self.E[int(e1)].hasLambdaTrans = True
 				self.E[int(e1)].addTransition(a1, int(e2), a2)
 
 			else:

@@ -65,7 +65,7 @@ def analyse(auto, word):
 			result = False
 			with open(pathLogFile, "a+") as logFile:
 				#logFile.write("\nErreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
-				logFile.write("\nErreur : {} not in F->{}".format(etatFinal.name, auto.F))
+				logFile.write("\nErreur : {} not in final states : F->{}".format(etatFinal.name, auto.F))
 			return output, result
 	else:
 		result = False
@@ -107,3 +107,5 @@ for word in words:
 			logFile.write("\n{}\t !=\tmot du langage de l'automate".format(word))
 			logFile.write("Sortie : {} ; {}".format(output, textOut))
 		logFile.write("\n")
+
+print("Automate créé, allez voir le fichier de log, faire un make graph\n")

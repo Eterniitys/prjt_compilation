@@ -5,6 +5,7 @@ class Etat:
 	def __init__(self, name):
 		self.name = name
 		self.transitions = list()
+		self.hasLambdaTrans = False
 
 	def addTransition(self, v, e, o):
 		transition = Transition(v, e, o)
@@ -17,7 +18,10 @@ class Etat:
 		print("Erreur: il pas de transition trouvée de l'état {} avec pour caractère lu {}".format(self.name,v))
 		sys.exit()
 	
-	def getLambdaT():
-		#TODO
-		pass
-
+	def getLambdaT(self):
+		trans = list()
+		if (self.hasLambdaTrans):
+			for transition in self.transitions:
+				if transition.v == '#' and transition.o == '#':
+					trans.append(transition)
+		return trans
