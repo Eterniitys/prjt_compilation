@@ -100,6 +100,19 @@ class Automate:
 			IState.append(self.E[state])
 		return IState
 		
+	def getLambdaClosure(self , origineStates):
+		p = []
+		for state in origineStates:
+			p.append(self.E[state])
+		lClosure = []
+		while not p.empty():
+			state = p.pop(0)
+			if state not in lClosure:
+				lClosure.append(state)
+				for lTransition in state.getLambdaT():
+					p.append(self.E[lTransition.e])
+			
+	
 	def logWrite(self , ch):
 		with open(pathAutomateLogFile, "a+") as logFile:
 			logFile.write(str(ch))

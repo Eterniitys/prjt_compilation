@@ -5,6 +5,9 @@ descr_folder := testMoteur/
 all:
 	python code/moteur.py testMoteur/C0.descr entrees/entree.txt
 
+lambda:
+	python code/moteur.py testMoteur/LT.descr entrees/entree.txt
+
 test:
 	python code/test.py
 help:
