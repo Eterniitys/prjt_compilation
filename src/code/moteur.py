@@ -56,7 +56,7 @@ def analyse(auto, word):
 	if testAlphabet(auto.V, word):
 
 
-		stateDep = auto.getInitialState()[0] #TODO plrs etats initiaux
+		stateDep = auto.getInitialStates()[0] #TODO plrs etats initiaux
 
 		etatFinal = testTransition(word,stateDep, auto, output)
 
@@ -84,14 +84,14 @@ words = readFile(filepath_input)
 ### AUTOMATE ###
 filepath_automate = sys.argv[1]
 auto = Automate(filepath_automate)
-auto.toDot()
 
 ### fichier de log
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
 	
 #print(auto.getLambdaClosure([0, 3]))
-
+auto = auto.determinise()
+auto.toDot()
 ### TREATMENT ###
 for word in words:
 	output, result = analyse(auto, word)

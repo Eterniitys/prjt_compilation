@@ -4,3 +4,6 @@ class Transition(object):
 		self.v = v # caractere lu
 		self.e = e # etat arrivé
 		self.o = o # caratere ecris
+		
+	def __repr__(self):
+		return "'{}' {} '{}'".format
