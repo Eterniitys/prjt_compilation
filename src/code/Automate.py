@@ -118,10 +118,16 @@ class Automate:
 				for alpha in self.V:
 					newStates = self.getLambdaClosure(transiter(stateBundle, alpha))
 					if newStates in L:
+						print("\n"+str(newStates), "\n"+str(L))
 						D.append([stateBundle, alpha, L[L.index(newStates)]])
 					else:
 						D.append([stateBundle, alpha, newStates])
 					p.append(newStates)
+		
+		self.determiniseToFile(L, D)
+		return Automate(pathToDeterminised)
+		
+	def determiniseToFile(self, L, D):
 		cmpt = 1
 		for etats in L:
 			if etats == []:
@@ -157,6 +163,7 @@ class Automate:
 					final += " {}".format(etats[-1][0])
 			g.write(init+"\n")
 			g.write(final+"\n")
+			#print(L)
 			for t in D:
 				#print(str(t))
 				if t[2] != []:
@@ -164,12 +171,10 @@ class Automate:
 				else:
 					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, "#"))
 		
-		return Automate(pathToDeterminised)
-
-
 	def logWrite(self , ch):
 		with open(pathAutomateLogFile, "a+") as logFile:
 			logFile.write(str(ch))
+
 		
 		
 """
