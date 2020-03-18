@@ -7,7 +7,7 @@ all:
 	@echo "   'graph' - génére un fichier png à partir de graph.dot"
 	@echo "   'list'  - Liste des automates disponible"
 	@echo "             s'utilise avec la commande make"
-	@echo "             ex: make AS"
+	@echo "             ex: make automate/AS"
 
 list:
 	@echo $(DESCR_FILES)
@@ -15,5 +15,5 @@ list:
 graph:
 	dot -Tpng dotImage/graph.dot > dotImage/graph.png
 
-%: $(wildcard $(descr_folder)%.descr)
+$(addprefix automate/,$(basename $(notdir $(wildcard $(descr_folder)*.descr)))): $(wildcard $(descr_folder)%.descr)
 	python src/moteur.py $(descr_folder)$@.descr $(entries_folder)$@.txt
