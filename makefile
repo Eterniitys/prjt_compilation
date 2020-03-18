@@ -1,6 +1,8 @@
 entries_folder := entrees/
 descr_folder := testMoteur/
-DESCR_FILES := $(patsubst $(descr_folder)%.descr, %, $(wildcard testMoteur/*.descr))
+
+DESCR_FILES := $(patsubst $(descr_folder)%.descr, %, $(wildcard $(descr_folder)*.descr))
+AUTO_RULE := $(addprefix automate/,$(basename $(notdir $(wildcard $(descr_folder)*.descr))))
 
 all: 
 	@echo "Commandes : "
@@ -15,5 +17,5 @@ list:
 graph:
 	dot -Tpng dotImage/graph.dot > dotImage/graph.png
 
-$(addprefix automate/,$(basename $(notdir $(wildcard $(descr_folder)*.descr)))): $(wildcard $(descr_folder)%.descr)
-	python src/moteur.py $(descr_folder)$@.descr $(entries_folder)$@.txt
+$(AUTO_RULE): $(wildcard $(descr_folder)%.descr)
+	python src/moteur.py $(descr_folder)$(notdir $@).descr $(entries_folder)$(notdir $@).txt

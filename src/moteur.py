@@ -1,4 +1,5 @@
 from Automate import *
+import os
 
 
 if len(sys.argv)< 3:
@@ -72,7 +73,12 @@ def analyse(auto, word):
 
 print("\nBienvenu sur notre moteur d'automate !")
 
-pathLogFile = "log/{}.log".format(sys.argv[1].split("/")[-1][:-6])
+try:
+    os.mkdir("logs")
+    os.mkdir("dotImage")
+except FileExistsError: pass
+
+pathLogFile = "logs/{}.log".format(sys.argv[1].split("/")[-1][:-6])
 
 ### INPUT ###
 filepath_input = sys.argv[2]

@@ -121,8 +121,8 @@ class Automate:
 
 	def determinise(self):
 		p = [self.getLambdaClosure(self.I)]
-		L = [] # tous les états finaux
-		D = [] # toutes les transition finales
+		L = [] # tous les états
+		D = [] # toutes les transition
 		while len(p) != 0:
 			stateBundle = p.pop(0)  # groupe d'états
 			if stateBundle not in L:
@@ -143,7 +143,7 @@ class Automate:
 		cmpt = 1
 		for etats in L:
 			if etats == []:
-				etats.append([0, False, False])
+				etats.append([0, False, False]) # 0 et le numéro par du puits
 			else:
 				etats.append([cmpt, False, False])
 				cmpt+=1
@@ -180,7 +180,8 @@ class Automate:
 				if t[2] != []:
 					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[2][-1][0], "#"))
 				else:
-					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, "#"))
+					# Si la transition n'éxiste pas alors on en créé une vers le puit
+					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, "#")) 
 		
 	def logWrite(self , ch):
 		with open(pathAutomateLogFile, "a+") as logFile:
