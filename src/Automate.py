@@ -1,6 +1,5 @@
 import re
 from Etat import *
-from determinisation import *
 
 pathAutomateLogFile = "automate.log"
 pathToDeterminised = "generatedAutomate.descr"
@@ -96,6 +95,9 @@ class Automate:
 	def getInitialStates(self):
 		return self.getStates(self.I)
 		
+
+	### DETERMINISATION ###
+
 	def getLambdaClosure(self , origineStates):
 		p = self.getStates(origineStates)
 		lClosure = []
@@ -106,7 +108,17 @@ class Automate:
 				for lTransition in state.getLambdaT():
 					p.append(self.E[lTransition.e])
 		return lClosure
-	
+
+	def transiter(self, T, a):
+		F = list()
+		for t in T:
+			trans = t.getTransition(a)
+			if (len(trans) > 0):
+				for p in trans:
+					if p.e not in F:
+						F.append(p.e)
+		return F
+
 	def determinise(self):
 		p = [self.getLambdaClosure(self.I)]
 		L = [] # tous les états finaux
@@ -116,9 +128,9 @@ class Automate:
 			if stateBundle not in L:
 				L.append(stateBundle)
 				for alpha in self.V:
-					newStates = self.getLambdaClosure(transiter(stateBundle, alpha))
+					newStates = self.getLambdaClosure(self.transiter(stateBundle, alpha))
 					if newStates in L:
-						print("\n"+str(newStates), "\n"+str(L))
+						#print("\n"+str(newStates), "\n"+str(L))
 						D.append([stateBundle, alpha, L[L.index(newStates)]])
 					else:
 						D.append([stateBundle, alpha, newStates])
@@ -163,9 +175,8 @@ class Automate:
 					final += " {}".format(etats[-1][0])
 			g.write(init+"\n")
 			g.write(final+"\n")
-			#print(L)
+
 			for t in D:
-				#print(str(t))
 				if t[2] != []:
 					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[2][-1][0], "#"))
 				else:

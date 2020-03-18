@@ -1,11 +1,19 @@
-all:
-	@echo "Rien a compiler pour le moment."
-	@echo "'make help' pour connaitre les commande utile"
+entries_folder := entrees/
+descr_folder := testMoteur/
+DESCR_FILES := $(patsubst $(descr_folder)%.descr, %, $(wildcard testMoteur/*.descr))
 
-help:
-	@echo "'graph' - génére un fichier png à partir de graph.dot"
+all: 
+	@echo "Commandes : "
+	@echo "   'graph' - génére un fichier png à partir de graph.dot"
+	@echo "   'list'  - Liste des automates disponible"
+	@echo "             s'utilise avec la commande make"
+	@echo "             ex: make AS"
+
+list:
+	@echo $(DESCR_FILES)
 
 graph:
-	dot -Tpng graph.dot > graph.png
+	dot -Tpng dotImage/graph.dot > dotImage/graph.png
 
-
+%: $(wildcard $(descr_folder)%.descr)
+	python src/moteur.py $(descr_folder)$@.descr $(entries_folder)$@.txt

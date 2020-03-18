@@ -33,7 +33,7 @@ def testAlphabet(alpha, word):
 		if c not in alpha:
 			rep = False
 			with open(pathLogFile, "a+") as logFile:
-				logFile.write("\nError : {} not in O->".format(c, alpha))
+				logFile.write("\nError : {} not in alphabet : V -> {}".format(c, alpha))
 	return rep
 
 def testTransition(word, stateDep, auto, output):
@@ -46,36 +46,33 @@ def testTransition(word, stateDep, auto, output):
 			#logFile.write("\nConfig: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
 			logFile.write("\n {} -> {}/{} -> {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
 		stateDep = stateArr
-	return stateArr
+	return stateArr, output
 
 def analyse(auto, word):
 	output = list() # sorties
 	result = True # mot appartient au langage ou pas
 
 	## verification alphabet d'entree ##
+
 	if testAlphabet(auto.V, word):
 
-
 		stateDep = auto.getInitialStates()[0] #TODO plrs etats initiaux
-
-		etatFinal = testTransition(word,stateDep, auto, output)
-
+		etatFinal, output = testTransition(word,stateDep, auto, output)
 		if etatFinal.name not in auto.F:
 			result = False
 			with open(pathLogFile, "a+") as logFile:
 				#logFile.write("\nErreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
-				logFile.write("\nErreur : {} not in final states : F->{}".format(etatFinal.name, auto.F))
+				logFile.write("\nErreur : {} not in final states : F -> {}".format(etatFinal.name, auto.F))
 			return output, result
 	else:
 		result = False
 
-
 	return output, result
 
 
-print("\nBienvenu sur notre moteur d'automate !\n")
+print("\nBienvenu sur notre moteur d'automate !")
 
-pathLogFile = "{}.log".format(sys.argv[1].split("/")[-1][:-6])
+pathLogFile = "log/{}.log".format(sys.argv[1].split("/")[-1][:-6])
 
 ### INPUT ###
 filepath_input = sys.argv[2]
@@ -92,6 +89,7 @@ with open(pathLogFile, "w") as logFile:
 #print(auto.getLambdaClosure([0, 3]))
 auto = auto.determinise()
 auto.toDot()
+
 ### TREATMENT ###
 for word in words:
 	output, result = analyse(auto, word)
@@ -101,12 +99,11 @@ for word in words:
 
 	with open(pathLogFile, "a+") as logFile:
 		if result :
-			logFile.write("\n{}\t ==\tmot du langage de l'automate".format(word))
+			logFile.write("\n{}\t ==\t mot du langage de l'automate".format(word))
 			logFile.write("Sortie : {} ; {}".format(output, textOut))
 		else :
-		
-			logFile.write("\n{}\t !=\tmot du langage de l'automate".format(word))
+			logFile.write("\n{}\t !=\t mot du langage de l'automate".format(word))
 			logFile.write("Sortie : {} ; {}".format(output, textOut))
 		logFile.write("\n")
 
-print("Automate créé, allez voir le fichier de log, faire un make graph\n")
+print("Automate créé, allez voir le fichier de log, faire un make graph")
