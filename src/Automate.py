@@ -111,13 +111,20 @@ class Automate:
 
 	def transiter(self, T, a):
 		F = list()
+		rw = list()
 		for t in T:
 			trans = t.getTransition(a)
+
 			if (len(trans) > 0):
 				for p in trans:
+					rw.append((p.v, p.o))
+
 					if p.e not in F:
 						F.append(p.e)
-		return F
+
+		if len(rw) == 0:
+			rw.append((a,'#'))
+		return F, rw
 
 	def determinise(self):
 		p = [self.getLambdaClosure(self.I)]
@@ -128,14 +135,16 @@ class Automate:
 			if stateBundle not in L:
 				L.append(stateBundle)
 				for alpha in self.V:
-					newStates = self.getLambdaClosure(self.transiter(stateBundle, alpha))
+					F, rw = self.transiter(stateBundle, alpha)
+					newStates = self.getLambdaClosure(F)
 					if newStates in L:
-						#print("\n"+str(newStates), "\n"+str(L))
-						D.append([stateBundle, alpha, L[L.index(newStates)]])
+						D.append([stateBundle, rw[0][0], rw[0][1] , L[L.index(newStates)]])
+					elif newStates in p:
+						D.append([stateBundle, rw[0][0], rw[0][1], p[p.index(newStates)]])
 					else:
-						D.append([stateBundle, alpha, newStates])
-					p.append(newStates)
-		
+						D.append([stateBundle, rw[0][0], rw[0][1] , newStates])
+						p.append(newStates)
+
 		self.determiniseToFile(L, D)
 		return Automate(pathToDeterminised)
 		
@@ -177,11 +186,11 @@ class Automate:
 			g.write(final+"\n")
 
 			for t in D:
-				if t[2] != []:
-					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[2][-1][0], "#"))
+				if t[3] != []:
+					#g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[3][-1][0], t[2]))
+					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[3][-1][0], t[2]))
 				else:
-					# Si la transition n'éxiste pas alors on en créé une vers le puit
-					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, "#")) 
+					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, t[2]))
 		
 	def logWrite(self , ch):
 		with open(pathAutomateLogFile, "a+") as logFile:
