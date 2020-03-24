@@ -144,7 +144,6 @@ class Automate:
 					else:
 						D.append([stateBundle, rw[0][0], rw[0][1] , newStates])
 						p.append(newStates)
-
 		self.determiniseToFile(L, D)
 		return Automate(pathToDeterminised)
 		
@@ -184,7 +183,6 @@ class Automate:
 					final += " {}".format(etats[-1][0])
 			g.write(init+"\n")
 			g.write(final+"\n")
-
 			for t in D:
 				if t[3] != []:
 					#g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[3][-1][0], t[2]))
