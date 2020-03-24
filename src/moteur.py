@@ -74,11 +74,13 @@ def analyse(auto, word):
 print("\nBienvenu sur notre moteur d'automate !")
 
 try:
+    os.mkdir("output")
     os.mkdir("logs")
     os.mkdir("dotImage")
 except FileExistsError: pass
 
 pathLogFile = "logs/{}.log".format(sys.argv[1].split("/")[-1][:-6])
+outputFile = "output/{}.txt".format(sys.argv[1].split("/")[-1][:-6])
 
 ### INPUT ###
 filepath_input = sys.argv[2]
@@ -91,7 +93,9 @@ auto.toDot("graphInitial.dot")
 ### fichier de log
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
-	
+with open(outputFile, "w") as out:
+	out.write("")
+
 #print(auto.getLambdaClosure([0, 3]))
 auto = auto.determinise()
 auto.toDot("graphDeter.dot")
@@ -105,11 +109,14 @@ for word in words:
 
 	with open(pathLogFile, "a+") as logFile:
 		if result :
-			logFile.write("\n{}\t ==\t mot du langage de l'automate".format(word))
+			logFile.write("\n{}\t Is a word from the language of the automaton\t".format(word))
 			logFile.write("Sortie : {} ; {}".format(output, textOut))
+			with open(outputFile, "a+") as out:
+				out.write("\nInput {} -> Output {}".format(word,output))
 		else :
-			logFile.write("\n{}\t !=\t mot du langage de l'automate".format(word))
+			logFile.write("\n{}\t Is not a word from the language of the automaton\t".format(word))
 			logFile.write("Sortie : {} ; {}".format(output, textOut))
 		logFile.write("\n")
+		
 
 print("Automate créé, allez voir le fichier de log, faire un make graph")

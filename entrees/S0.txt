@@ -1,5 +1,6 @@
-1001 1101 10010
-1001
-101  1110
-10110
+abb caa abba
+aabb
+aac  cbb
+bbca
+ac
 ###
