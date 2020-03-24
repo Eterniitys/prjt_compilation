@@ -79,6 +79,10 @@ class Automate:
 	def toDot(self,name):
 		file = open("dotImage/"+name,"w")
 		file.write("digraph automate {\n")
+		for state_nb in self.I:
+			file.write("\t{} [peripheries=2];\n".format(state_nb))
+		for state_nb in self.F:
+			file.write("\t{} [color=black, style=filled, fontcolor=white];\n".format(state_nb))
 		for state in self.E:
 			for transition in state.transitions:
 				dep = state.name
