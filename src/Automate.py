@@ -76,8 +76,8 @@ class Automate:
 		if len(self.F) == 0:
 			self.logWrite("Missing decription line : F")
 
-	def toDot(self):
-		file = open("dotImage/graph.dot","w")
+	def toDot(self,name):
+		file = open("dotImage/"+name,"w")
 		file.write("digraph automate {\n")
 		for state in self.E:
 			for transition in state.transitions:

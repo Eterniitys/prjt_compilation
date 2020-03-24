@@ -87,14 +87,14 @@ words = readFile(filepath_input)
 ### AUTOMATE ###
 filepath_automate = sys.argv[1]
 auto = Automate(filepath_automate)
-
+auto.toDot("graphInitial.dot")
 ### fichier de log
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
 	
 #print(auto.getLambdaClosure([0, 3]))
 auto = auto.determinise()
-auto.toDot()
+auto.toDot("graphDeter.dot")
 
 ### TREATMENT ###
 for word in words:

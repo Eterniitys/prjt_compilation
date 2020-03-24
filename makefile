@@ -15,7 +15,8 @@ list:
 	@echo $(DESCR_FILES)
 
 graph:
-	dot -Tpng dotImage/graph.dot > dotImage/graph.png
+	dot -Tpng dotImage/graphInitial.dot > dotImage/graphInitial.png
+	dot -Tpng dotImage/graphDeter.dot > dotImage/graphDeter.png
 
 $(AUTO_RULE): $(wildcard $(descr_folder)%.descr)
 	python src/moteur.py $(descr_folder)$(notdir $@).descr $(entries_folder)$(notdir $@).txt
