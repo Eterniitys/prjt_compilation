@@ -13,13 +13,20 @@ class Automate:
 		self.O = []	# alpabet sortie
 		self.M = "#"
 
-		f = open(filepath, "r")
+		self.initLog()
+		with open(filepath, "r") as f:
+			check = self.check_file(f)
+			if check != 0:
+				exit(check)
+		with open(filepath, "r") as f:
+			self.init(f)
+
+	def init(self, f):
 		cmpt = 0
 		for line in f:
 			cmpt += 1
 			if re.match(r"^C\s+", line):
-					pass
-
+				pass
 			elif re.match(r"^M\s+(.)\s*$", line):
 				groups = re.match(r"^M\s+(.)\s*$", line)
 				self.M = groups.group(1)
@@ -67,14 +74,7 @@ class Automate:
 				self.E[int(e1)].addTransition(a1, int(e2), a2)
 
 			else:
-				self.logWrite("Error line {} ; bad description file ; {}".format(cmpt, line))
-
-		if len(self.E) == 0:
-			self.logWrite("Missing decription line : E")
-		if len(self.V) == 0:
-			self.logWrite("Missing decription line : V")
-		if len(self.F) == 0:
-			self.logWrite("Missing decription line : F")
+				self.logWrite("Error line {} ; bad description file ; {}\n".format(cmpt, line))
 
 	def toDot(self,name):
 		file = open("dotImage/"+name,"w")
@@ -193,26 +193,83 @@ class Automate:
 					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], t[3][-1][0], t[2]))
 				else:
 					g.write("T {} '{}' {} '{}'\n".format(t[0][-1][0], t[1], 0, t[2]))
-		
+
 	def logWrite(self , ch):
 		with open(pathAutomateLogFile, "a+") as logFile:
 			logFile.write(str(ch))
+			
+	def initLog(self):
+		with open(pathAutomateLogFile, "w") as logFile:
+			logFile.write("")
+						
+	def check_file(self, f):
+		cmpt = 0
+		state_checker = 0
+		hasLine = {
+			0 : False,
+			1 : False,
+			2 : False,
+			3 : False,
+			4 : False,
+			5 : False,
+			6 : False,
+			7 : False
+		}
+		typeLine = {
+			0 : "C",
+			1 : "M",
+			2 : "V",
+			3 : "O",
+			4 : "E",
+			5 : "I",
+			6 : "F",
+			7 : "T"
+		}
+		for l in f:
+			if l[0] =="C" and state_checker < 1:
+				state_checker = 1
+				hasLine[state_checker-1] = True
+			elif l[0] == "M" and state_checker < 2:
+				state_checker = 2
+				hasLine[state_checker-1] = True
+			elif l[0] == "V" and state_checker < 3:
+				state_checker = 3
+				hasLine[state_checker-1] = True
+			elif l[0] == "O" and state_checker == 3:
+				state_checker = 4
+				hasLine[state_checker-1] = True
+			elif l[0] == "E" and state_checker >= 3 and state_checker <= 4:
+				state_checker = 5
+				hasLine[state_checker-1] = True
+			elif l[0] == "I" and state_checker == 5:
+				state_checker = 6
+				hasLine[state_checker-1] = True
+			elif l[0] == "F" and state_checker >= 5 and state_checker <= 6:
+				state_checker = 7
+				hasLine[state_checker-1] = True
+			elif l[0] == "T" and state_checker == 7:
+				hasLine[state_checker-1] = True
+			elif state_checker == 7 and l[0] != "T" :
+				hasLine[state_checker-1] = False
+			cmpt += 1
+		for i in range (len(hasLine)):
+			if not hasLine[i]:
+				if i == 2 or i == 4 or i == 6:
+					self.logWrite(">Error< there is no line {}\n".format(typeLine[i]))
+					break
+				else:
+					self.logWrite("Warning there is no line {}\n".format(typeLine[i]))
+		return 0
+	
+#<AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]*
+
 
 		
 		
 """
-<AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]* (1)
+<AEF> ::= [<ligneC>] 1 [<ligneM>] 2 <ligneV> 3 [<ligneO>] 4 <ligneE> 5 [<ligneI>] 6 <ligneF> 7 [<ligneT>]* (1)
 
-ligne C (commentaire) ::= C 
-ligne M (méta)   ::= M µ        : le méta-caractère représentant lambda (défaut : #) (ici : µ)
-ligne V (entrée) ::= V "c[c]*"    : le vocabulaire d'entrée (pas de défaut) (2)
-ligne O (sortie) ::= O "c[c]*"    : le vocabulaire de sortie (défaut : pas de sortie) (2)
-ligne E (nbre)   ::= E i        : nombre d'états (E = 0..N-1) (pas de défaut)
-ligne I (init)   ::= I i[ i]*   : les états initiaux (défaut : 0)
-ligne F (final)  ::= F [i[ i]*] : les états acceptants (pas de défaut) (5)
-ligne T (trans)  ::= i 'x' i 'x'    : une transition de ExVxExO (3) (4)
-
-(0) Les lignes entre crochets sont facultatives, les autres (V, E, F) sont obligatoires.
+check (0) Les lignes entre crochets sont facultatives, les autres (V, E, F) sont obligatoires.
 (1) <ligneT> ne peut être suivie que par <ligneT>. Le fichier peut éventuellement se terminer par une ligne vide, ou non.
 (2) "c[c]*" doit être fourni entre guillemets.
 (3) i 'x' i 'µ' peut aussi s'écrire i 'x' i

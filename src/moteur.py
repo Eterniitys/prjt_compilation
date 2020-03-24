@@ -70,7 +70,6 @@ def analyse(auto, word):
 
 	return output, result
 
-
 print("\nBienvenu sur notre moteur d'automate !")
 
 try:
@@ -86,17 +85,22 @@ outputFile = "output/{}.txt".format(sys.argv[1].split("/")[-1][:-6])
 filepath_input = sys.argv[2]
 words = readFile(filepath_input)
 
+with open(pathLogFile, "w") as logFile:
+	logFile.write("")
+
 ### AUTOMATE ###
 filepath_automate = sys.argv[1]
 auto = Automate(filepath_automate)
 auto.toDot("graphInitial.dot")
 ### fichier de log
+
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
 with open(outputFile, "w") as out:
 	out.write("")
 
 #print(auto.getLambdaClosure([0, 3]))
+
 auto = auto.determinise()
 auto.toDot("graphDeter.dot")
 
