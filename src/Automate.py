@@ -248,15 +248,16 @@ class Automate:
 				state_checker = 7
 				hasLine[state_checker-1] = True
 			elif l[0] == "T" and state_checker == 7:
+				state_checker = 8
 				hasLine[state_checker-1] = True
-			elif state_checker == 7 and l[0] != "T" :
+			elif state_checker == 8 and l[0] != "T" :
 				hasLine[state_checker-1] = False
 			cmpt += 1
 		for i in range (len(hasLine)):
 			if not hasLine[i]:
 				if i == 2 or i == 4 or i == 6:
 					self.logWrite(">Error< there is no line {}\n".format(typeLine[i]))
-					break
+					return 50+i
 				else:
 					self.logWrite("Warning there is no line {}\n".format(typeLine[i]))
 		return 0

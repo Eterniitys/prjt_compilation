@@ -101,8 +101,8 @@ with open(outputFile, "w") as out:
 
 #print(auto.getLambdaClosure([0, 3]))
 
-auto = auto.determinise()
-auto.toDot("graphDeter.dot")
+#auto = auto.determinise()
+#auto.toDot("graphDeter.dot")
 
 ### TREATMENT ###
 for word in words:
