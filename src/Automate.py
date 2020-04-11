@@ -253,6 +253,7 @@ class Automate:
 			elif state_checker == 8 and l[0] != "T" :
 				hasLine[state_checker-1] = False
 			cmpt += 1
+			
 		for i in range (len(hasLine)):
 			if not hasLine[i]:
 				if i == 2 or i == 4 or i == 6:
@@ -261,34 +262,3 @@ class Automate:
 				else:
 					self.logWrite("Warning there is no line {}\n".format(typeLine[i]))
 		return 0
-	
-#<AEF> ::= [<ligneC>] [<ligneM>] <ligneV> [<ligneO>] <ligneE> [<ligneI>] <ligneF> [<ligneT>]*
-
-
-		
-		
-"""
-<AEF> ::= [<ligneC>] 1 [<ligneM>] 2 <ligneV> 3 [<ligneO>] 4 <ligneE> 5 [<ligneI>] 6 <ligneF> 7 [<ligneT>]* (1)
-
-check (0) Les lignes entre crochets sont facultatives, les autres (V, E, F) sont obligatoires.
-(1) <ligneT> ne peut être suivie que par <ligneT>. Le fichier peut éventuellement se terminer par une ligne vide, ou non.
-(2) "c[c]*" doit être fourni entre guillemets.
-(3) i 'x' i 'µ' peut aussi s'écrire i 'x' i
-(4) i 'c' j 'x' représente la transition de i vers j par c avec sortie de x (ou rien si x=µ)
-    i 'µ' j 'x' représente la transition de i vers j par lambda avec sortie de x (ou rien si x=µ)
-(5) En cas d'états multiples, ceux-ci sont séparés par un espace.
-
-Légende :
-i représente un entier sans signe
-c représente un caractère quelconque, différent de la représentation du méta-caractère lambda
-x représente un caractère quelconque, ou le méta-caractère ( x    ::= c | µ )
-[q] indique que q est facultatif                            ( [q]  ::= q | µ )
-[q]* indique que q peut être fourni 0 ou plusieurs fois     ( [q]* ::= q[q]* | µ )
-
-Note : 
-- les espaces ne sont pas considérés. Ils doivent être ignorés lors de l'analyse.
-
-Notes :
- - I 0 est sous-entendue.
- - on aurait pu écrire T 0 '1' 1 au lieu de T 0 '1' 1 '#'.
- """
