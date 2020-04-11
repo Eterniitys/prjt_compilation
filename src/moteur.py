@@ -1,6 +1,6 @@
 from Automate import *
 import os
-
+import sys
 
 if len(sys.argv)< 3:
 	print("You should set paramaters as folow:")
@@ -40,12 +40,16 @@ def testAlphabet(alpha, word):
 def testTransition(word, stateDep, auto, output):
 	for charactere in word:
 		stateArr, characterEcris = stateDep.transitTo(charactere)
+		if (stateArr == -1):
+			with open(pathLogFile, "a+") as logFile:
+				logFile.write("\nError: transition not found for state {} with {}".format(stateDep.name,charactere))
+				logFile.write("\nWord \"{}\" is not recognized.".format(word))
+				sys.exit()
 		stateArr = auto.E[stateArr]
 		if characterEcris != auto.M :
 			output.append(characterEcris)
 		with open(pathLogFile, "a+") as logFile:
-			#logFile.write("\nConfig: Etat départ = {} | Caractère lu = {} | Caractère écris = {} | Etat arrivé = {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
-			logFile.write("\n {} -> {}/{} -> {}".format(stateDep.name, charactere, characterEcris, stateArr.name))
+			logFile.write("{} -> {}/{} -> {}\n".format(stateDep.name, charactere, characterEcris, stateArr.name))
 		stateDep = stateArr
 	return stateArr, output
 
@@ -63,7 +67,7 @@ def analyse(auto, word):
 			result = False
 			with open(pathLogFile, "a+") as logFile:
 				#logFile.write("\nErreur : {} ne correspond pas à un état final de l'automate".format(etatFinal.name))
-				logFile.write("\nErreur : {} not in final states : F -> {}".format(etatFinal.name, auto.F))
+				logFile.write("\nError : {} not in final states : F -> {}".format(etatFinal.name, auto.F))
 			return output, result
 	else:
 		result = False
@@ -92,17 +96,14 @@ with open(pathLogFile, "w") as logFile:
 filepath_automate = sys.argv[1]
 auto = Automate(filepath_automate)
 auto.toDot("graphInitial.dot")
-### fichier de log
+
+auto = auto.determinise()
+auto.toDot("graphDeter.dot")
 
 with open(pathLogFile, "w") as logFile:
 	logFile.write("")
 with open(outputFile, "w") as out:
 	out.write("")
-
-#print(auto.getLambdaClosure([0, 3]))
-
-#auto = auto.determinise()
-#auto.toDot("graphDeter.dot")
 
 ### TREATMENT ###
 for word in words:
@@ -113,13 +114,13 @@ for word in words:
 
 	with open(pathLogFile, "a+") as logFile:
 		if result :
-			logFile.write("\n{}\t Is a word from the language of the automaton\t".format(word))
-			logFile.write("Sortie : {} ; {}".format(output, textOut))
+			logFile.write("\n\"{}\"\t Is a word from the language of the automaton\n".format(word))
+			logFile.write("Sortie : {} ; {}\n".format(output, textOut))
 			with open(outputFile, "a+") as out:
 				out.write("\nInput {} -> Output {}".format(word,output))
 		else :
-			logFile.write("\n{}\t Is not a word from the language of the automaton\t".format(word))
-			logFile.write("Sortie : {} ; {}".format(output, textOut))
+			logFile.write("\n\"{}\"\t Is not a word from the language of the automaton\n".format(word))
+			logFile.write("Sortie : {} ; {}\n".format(output, textOut))
 		logFile.write("\n")
 		
 

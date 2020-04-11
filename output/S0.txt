@@ -1,0 +1,2 @@
+
+Input ac -> Output ['2']
