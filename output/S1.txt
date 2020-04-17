@@ -1,8 +1,0 @@
-
-Input abba -> Output ['i', 'o']
-Input ab -> Output ['i']
-Input abb -> Output ['i']
-Input ba -> Output ['o']
-Input bbb -> Output []
-Input aaa -> Output []
-Input aba -> Output ['i']

@@ -1,5 +1,7 @@
 abbc abb abb
 cca
 cba  abba
+abcaabc
 abb
+aa
 ###

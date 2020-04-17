@@ -10,18 +10,19 @@ class Etat:
 	def __repr__(self):
 		return "<{}>".format(str(self.name))
 
+	# add transition to state
 	def addTransition(self, v, e, o):
 		transition = Transition(v, e, o)
 		self.transitions.append(transition)
 
+	# transit to function, return -1 if transition dont exist
 	def transitTo(self, v):
 		for transition in self.transitions:
 			if (transition.v == v):
 				return transition.e, transition.o
-		#print("Erreur: il pas de transition trouvée de l'état {} avec pour caractère lu {}".format(self.name,v))
-		#sys.exit()
 		return -1, -1
 	
+	# get lambda transition
 	def getLambdaT(self):
 		trans = list()
 		if (self.hasLambdaTrans):
@@ -30,6 +31,7 @@ class Etat:
 					trans.append(transition)
 		return trans
 
+	# get transistion
 	def getTransition(self, a):
 		trans = list()
 		for transition in self.transitions:

@@ -1,4 +1,0 @@
-
-Input 10010 -> Output ['b', 'a', 'b']
-Input 1110 -> Output ['d', 'a']
-Input 10110 -> Output ['b', 'c']

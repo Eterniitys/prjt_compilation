@@ -1,8 +1,0 @@
-
-Input pmm -> Output ['p', 'm']
-Input pmmp -> Output ['p', 'm', 'p']
-Input pm -> Output ['p', 'm']
-Input pmmp -> Output ['p', 'm', 'p']
-Input mm -> Output ['m']
-Input pp -> Output ['p']
-Input pm -> Output ['p', 'm']
